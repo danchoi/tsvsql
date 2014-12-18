@@ -1,0 +1,23 @@
+tsvsql
+
+Templates TSV values into a SQL template
+
+input.tsv:
+apple 1
+banana 2
+
+tsvsql $ < input.tsv dist/build/tsvsql/tsvsql 'INSERT into fruits (name, price) VALUES ($1, $2:num);'
+INSERT into fruits (name, price) VALUES ('apple', 1);
+INSERT into fruits (name, price) VALUES ('banana', 2);
+
+
+'null' text is translated into NULL:
+
+input2.tsv
+apple	1
+banana	null
+
+tsvsql $ < input2.tsv dist/build/tsvsql/tsvsql 'INSERT into fruits (name, price) VALUES ($1, $2:num);'
+INSERT into fruits (name, price) VALUES ('apple', 1);
+INSERT into fruits (name, price) VALUES ('banana', NULL);
+
