@@ -21,3 +21,12 @@ tsvsql $ < input2.tsv dist/build/tsvsql/tsvsql 'INSERT into fruits (name, price)
 INSERT into fruits (name, price) VALUES ('apple', 1);
 INSERT into fruits (name, price) VALUES ('banana', NULL);
 
+
+The subtitution placeholders are like this:
+
+    $1      # value is a string; the value is quoted and escaped
+    $2:num  # value is a number; not quoted
+    $3:bool # value is a bool; "t" is true, "f" is false
+
+The placeholders start counting the first TSV value from position 1, not
+zero.
