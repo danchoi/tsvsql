@@ -31,7 +31,7 @@ tmplFile = TemplateFile
 opts = O.info (O.helper <*> parseOpts)
           (O.fullDesc 
           <> O.progDesc "Inject TSV into SQL template strings" 
-          <> O.header "tsvsql")
+          <> O.header "tsvsql 0.1.1.0")
 
 main = do
   Options tmpl <- O.execParser opts
@@ -57,7 +57,8 @@ evalChunk :: [Text] -> TemplateChunk -> Text
 evalChunk vs (Pass s) = s
 evalChunk vs (Placeholder idx _) | (vs !! idx) == "null" = "NULL"
 evalChunk vs (Placeholder idx String) = wrapQuote (vs !! idx)
-evalChunk vs (Placeholder idx Number) = (vs !! idx)
+evalChunk vs (Placeholder idx Number) | (vs !! idx) == "" = "NULL"
+                                      | otherwise         = (vs !! idx)
 evalChunk vs (Placeholder idx Bool) | (vs !! idx) == "t" = "true"
 evalChunk vs (Placeholder idx Bool) | (vs !! idx) == "f" = "false"
 
