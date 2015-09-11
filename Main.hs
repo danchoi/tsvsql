@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, ScopedTypeVariables#-}
+{-# LANGUAGE OverloadedStrings, ScopedTypeVariables, QuasiQuotes #-}
 module Main where
 import Data.Monoid
 import qualified Data.Map.Strict as M
@@ -14,6 +14,7 @@ import Control.Monad (when)
 import Data.Attoparsec.Text 
 import System.Environment (getArgs)
 import qualified Options.Applicative as O
+import Data.String.QQ
 
 data Options = Options {  
       template :: Template
@@ -30,8 +31,8 @@ tmplFile = TemplateFile
 
 opts = O.info (O.helper <*> parseOpts)
           (O.fullDesc 
-          <> O.progDesc "Inject TSV into SQL template strings" 
-          <> O.header "tsvsql 0.1.1.0")
+          <> O.progDesc [s|Inject TSV into SQL template strings|]
+          <> O.header "tsvsql 0.2.0.0")
 
 main = do
   Options tmpl <- O.execParser opts
@@ -61,6 +62,8 @@ evalChunk vs (Placeholder idx Number) | (vs !! idx) == "" = "NULL"
                                       | otherwise         = (vs !! idx)
 evalChunk vs (Placeholder idx Bool) | (vs !! idx) == "t" = "true"
 evalChunk vs (Placeholder idx Bool) | (vs !! idx) == "f" = "false"
+evalChunk vs (Placeholder idx Bool) | (vs !! idx) == "1" = "true"
+evalChunk vs (Placeholder idx Bool) | (vs !! idx) == "0" = "false"
 
 wrapQuote x = T.singleton '\'' <> (escapeText x) <> T.singleton '\''
 
