@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                tsvsql
-version:             0.2.0.0
+version:             0.2.1.0
 synopsis:            Template tsv into SQL
 -- description:         
 homepage:            https://github.com/danchoi/tsvsql
@@ -20,7 +20,7 @@ executable tsvsql
   main-is:             Main.hs
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.6 && <4.8
+  build-depends:       base >=4.6 && <4.9
                      , unordered-containers 
                      , containers 
                      , text >= 1.1.0.0

@@ -32,7 +32,7 @@ tmplFile = TemplateFile
 opts = O.info (O.helper <*> parseOpts)
           (O.fullDesc 
           <> O.progDesc [s|Inject TSV into SQL template strings|]
-          <> O.header "tsvsql 0.2.0.0")
+          <> O.header "tsvsql 0.2.1.0")
 
 main = do
   Options tmpl <- O.execParser opts
