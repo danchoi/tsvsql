@@ -20,7 +20,7 @@ executable tsvsql
   main-is:             Main.hs
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.6 && <4.9
+  build-depends:       base >=4.6 && <5.0
                      , unordered-containers 
                      , containers 
                      , text >= 1.1.0.0
