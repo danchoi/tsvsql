@@ -6,7 +6,7 @@ input.tsv:
 apple 1
 banana 2
 
-tsvsql $ < input.tsv dist/build/tsvsql/tsvsql 'INSERT into fruits (name, price) VALUES ($1, $2:num);'
+$ tsvsql 'INSERT into fruits (name, price) VALUES ($1, $2:num);' < input.tsv 
 INSERT into fruits (name, price) VALUES ('apple', 1);
 INSERT into fruits (name, price) VALUES ('banana', 2);
 
@@ -20,7 +20,7 @@ input2.tsv
 apple	1
 banana	null
 
-tsvsql $ < input2.tsv dist/build/tsvsql/tsvsql 'INSERT into fruits (name, price) VALUES ($1, $2:num);'
+$ tsvsql 'INSERT into fruits (name, price) VALUES ($1, $2:num);' < input2.tsv 
 INSERT into fruits (name, price) VALUES ('apple', 1);
 INSERT into fruits (name, price) VALUES ('banana', NULL);
 
