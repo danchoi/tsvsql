@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, ScopedTypeVariables, QuasiQuotes #-}
+{-# LANGUAGE OverloadedStrings, ScopedTypeVariables, QuasiQuotes, RecordWildCards #-}
 module Main where
 import Data.Monoid
 import qualified Data.Map.Strict as M
@@ -14,16 +14,24 @@ import Control.Monad (when)
 import Data.Attoparsec.Text 
 import System.Environment (getArgs)
 import qualified Options.Applicative as O
+import Options.Applicative (help, metavar, value, strOption, short)
 import Data.String.QQ
 
 data Options = Options {  
-      template :: Template
+      delimiter :: Text
+    , template :: Template
     } deriving Show
 
 data Template = TemplateFile FilePath | TemplateText Text deriving (Show)
 
 parseOpts :: O.Parser Options
-parseOpts = Options <$> (tmplText <|> tmplFile)
+parseOpts = Options 
+    <$> (T.pack <$> (
+          strOption 
+            (value "\t" <> short 'd' <> metavar "DELIMITER" <> help "Delimiter. Default TAB")
+          )
+        )
+    <*> (tmplText <|> tmplFile)
 
 tmplText = TemplateText . T.pack <$> O.argument O.str (O.metavar "TEMPLATE")
 tmplFile = TemplateFile 
@@ -35,13 +43,13 @@ opts = O.info (O.helper <*> parseOpts)
           <> O.header "tsvsql 0.2.1.0")
 
 main = do
-  Options tmpl <- O.execParser opts
-  template <- case tmpl of
+  Options{..} <- O.execParser opts
+  template' <- case template of
                   TemplateFile fp -> T.readFile fp
                   TemplateText t -> return t
-  xs :: [[Text]] <- fmap (map (T.splitOn "\t") . T.lines) T.getContents 
+  xs :: [[Text]] <- fmap (map (T.splitOn delimiter) . T.lines) T.getContents 
   let chunks :: [TemplateChunk] 
-      chunks = parseText template
+      chunks = parseText template'
       results = map (evalText chunks) xs
   mapM_ T.putStrLn results
 
